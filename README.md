@@ -3,7 +3,7 @@
 In project 8, I deployed a Continues integration on AWS, this project is actually a continuation of it, I will be implementing the continues delivery part of it. The code is hosted in Codecommit, whenever there is an update, Cloudwatch events triggers the pipeline which fetches the code, runs a test on Sonarcloud, if the quality gate is passed, the pipeline launches the build phase, stores the built artifact in an S3 bucket next Elastic Beanstalk picks the deployment in S3 and update its environment. After a 360 seconds waiting, the final stage of the pipeline is triggered which tests the deployed software, the credentials of a test user, initially stored in DB is used to login to the webApp and takes screenshots which are stored in S3 aswell.
 
 ## Architechture
-![](project10-architecture)
+![](https://github.com/Ndzenyuy/Project_10-Continues-delivery-on-AWS/blob/cicd-aws/images/project10%20architecture.jpg)
 
 ## Technologies
   - AWS Codebuild
@@ -14,6 +14,7 @@ In project 8, I deployed a Continues integration on AWS, this project is actuall
 
 ## Prerequisites
   - AWS account
+  - Project 8
 
 ## Steps
 1. Beanstalk setup \
@@ -49,8 +50,8 @@ In project 8, I deployed a Continues integration on AWS, this project is actuall
     step 6: Review and submit
 
    ```
-   ![](Created beanstalk environment)
-   ![](launched instances)
+   ![](https://github.com/Ndzenyuy/Project_10-Continues-delivery-on-AWS/blob/cicd-aws/images/launched%20successful%20environment.png)
+   ![](https://github.com/Ndzenyuy/Project_10-Continues-delivery-on-AWS/blob/cicd-aws/images/launched%20enviroment%20instances.png)
 
 2. RRDS Setup
 ```
