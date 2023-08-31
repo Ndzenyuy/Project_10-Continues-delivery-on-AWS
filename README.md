@@ -572,6 +572,6 @@ notification rule settings
 ![[](https://github.com/Ndzenyuy/Project_10-Continues-delivery-on-AWS/blob/cicd-aws/images/successful-login.png)
 
 When pipeline is successful, sofware testing delivers a zip folder in the bucket we created. When downloaded, we can see a screenshot of the login page, to show the software is successful
-![]()
-![[]()
+![](https://github.com/Ndzenyuy/Project_10-Continues-delivery-on-AWS/blob/cicd-aws/images/Screenshot%20from%202023-08-31%2013-23-00.png)
+![](https://github.com/Ndzenyuy/Project_10-Continues-delivery-on-AWS/blob/cicd-aws/images/Screenshot%20from%202023-08-31%2013-23-40.png)
 
