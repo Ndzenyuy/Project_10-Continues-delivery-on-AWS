@@ -91,8 +91,8 @@ In project 8, I deployed a Continues integration on AWS, this project is actuall
     Back to beanstalk -> configuration -> Configure instance traffic and scaling \
     Edit processes, Healthcheck to ```\login```
     Edit Stickiness, sticky sessions = true
-    ![](Healthcheck = \login)
-    ![](stickiness=true)
+    ![](https://github.com/Ndzenyuy/Project_10-Continues-delivery-on-AWS/blob/cicd-aws/images/enter%20dashlogin.png)
+    ![](https://github.com/Ndzenyuy/Project_10-Continues-delivery-on-AWS/blob/cicd-aws/images/edit%20healthchecks.png)
 
 4. Pom.xml and settings.xml files
 Edit pom.xml file to have the following contents in branch cd-aws
@@ -402,7 +402,7 @@ Edit settings.xml to have the following
     - And create
 
    ```
-   ![](parameter store)
+   ![](https://github.com/Ndzenyuy/Project_10-Continues-delivery-on-AWS/blob/cicd-aws/images/parameter%20store.png)
 
    Back to Terminal on your computer, regenerate the CODEARTIFACT-AUTH-TOKEN, run the following
    ```
@@ -470,7 +470,7 @@ Edit settings.xml to have the following
     create build project
 
     ```
-    ![](pipeline)
+    ![](https://github.com/Ndzenyuy/Project_10-Continues-delivery-on-AWS/blob/cicd-aws/images/buildprojects.png)
 
 7. Pipeline setup
     Create a pipeline
@@ -555,6 +555,8 @@ Edit settings.xml to have the following
     ```
 Save pipeline, and release change to launch the pipeline
 
+![](https://github.com/Ndzenyuy/Project_10-Continues-delivery-on-AWS/blob/cicd-aws/images/successful-pipeline.png)
+
 Update notifications
 ```
 manage notifications rules
@@ -566,5 +568,10 @@ notification rule settings
     targets: vprofile-pipeline notification
     -> submit
 ```
+![](https://github.com/Ndzenyuy/Project_10-Continues-delivery-on-AWS/blob/cicd-aws/images/login-page.png)
+![[](https://github.com/Ndzenyuy/Project_10-Continues-delivery-on-AWS/blob/cicd-aws/images/successful-login.png)
 
+When pipeline is successful, sofware testing delivers a zip folder in the bucket we created. When downloaded, we can see a screenshot of the login page, to show the software is successful
+![]()
+![[]()
 
