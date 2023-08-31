@@ -14,12 +14,12 @@ In project 8, I deployed a Continues integration on AWS, this project is actuall
 
 ## Prerequisites
   - AWS account
-  
+
 ## Steps
 1. Beanstalk setup \
    Create a beanstalk environment
  ```step 1: Configure Environment
-        Application: 
+        Application:
         Application Name: vprofile-app
         Plateform: Tomcat
             Platform branch: Tomcat 8.5 with corretto 8 running on 64bit Amazon linux 2
@@ -42,8 +42,8 @@ In project 8, I deployed a Continues integration on AWS, this project is actuall
         Autoscaling group: Environment type -> Load Balanced
         Instances: min=2, max=4
         Instance type: t2.micro
-        processes: select default and edit stickness -> enable sticky sessions   
-    
+        processes: select default and edit stickness -> enable sticky sessions
+
     step 5: Configure updates, monitoring and logging: leave defaults
 
     step 6: Review and submit
@@ -62,7 +62,7 @@ In project 8, I deployed a Continues integration on AWS, this project is actuall
       - autogenerate password=true
       - single AZ
       - create secgroup: vprofile-cicd-mysql-sg
-      - Additional configurations: 
+      - Additional configurations:
         initial database name: accounts
      -> create database
      -> load credentials and save them(username and password)
@@ -75,7 +75,7 @@ In project 8, I deployed a Continues integration on AWS, this project is actuall
     ```
     sudo -i
     yum install mysql git -y
-    mysql -h <RDS-mysql-endpoint> -u admin -p<the-Auto-generated-Password-During-Creation> 
+    mysql -h <RDS-mysql-endpoint> -u admin -p<the-Auto-generated-Password-During-Creation>
     ```
     If connection is successful, then we are good to go. Next
     ```
@@ -87,12 +87,12 @@ In project 8, I deployed a Continues integration on AWS, this project is actuall
 
     ```
 
-    Back to beanstalk -> configuration -> Configure instance traffic and scaling \ 
+    Back to beanstalk -> configuration -> Configure instance traffic and scaling \
     Edit processes, Healthcheck to ```\login```
     Edit Stickiness, sticky sessions = true
     ![](Healthcheck = \login)
     ![](stickiness=true)
- 
+
 4. Pom.xml and settings.xml files
 Edit pom.xml file to have the following contents in branch cd-aws
 ```
@@ -126,13 +126,13 @@ Edit pom.xml file to have the following contents in branch cd-aws
             <artifactId>spring-web</artifactId>
             <version>${spring.version}</version>
         </dependency>
-	    
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
         </dependency>
-	    
+
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
@@ -204,7 +204,7 @@ Edit pom.xml file to have the following contents in branch cd-aws
 	     <artifactId>javax.servlet-api</artifactId>
 	     <version>3.1.0</version>
 	     <scope>provided</scope>
-	</dependency>		
+	</dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -226,7 +226,7 @@ Edit pom.xml file to have the following contents in branch cd-aws
 		    <groupId>net.spy</groupId>
 		    <artifactId>spymemcached</artifactId>
 		    <version>2.12.3</version>
-		</dependency>				
+		</dependency>
 		<dependency>
 		    <groupId>commons-io</groupId>
 		    <artifactId>commons-io</artifactId>
@@ -238,7 +238,7 @@ Edit pom.xml file to have the following contents in branch cd-aws
 	            <artifactId>spring-rabbit</artifactId>
 	            <version>1.7.1.RELEASE</version>
 	    </dependency>
-	
+
 	    <dependency>
 	            <groupId>com.rabbitmq</groupId>
 	            <artifactId>amqp-client</artifactId>
@@ -298,7 +298,7 @@ Edit pom.xml file to have the following contents in branch cd-aws
  		            </execution>
  		        </executions>
  		</plugin>
-		
+
         </plugins>
     </build>
   <repositories>
@@ -397,7 +397,7 @@ Edit settings.xml to have the following
 
     - Logs: Group name = vprofile-cicd-logs
             stream name: Build&releaseJob
-    
+
     - And create
 
    ```
@@ -406,7 +406,7 @@ Edit settings.xml to have the following
    Back to Terminal on your computer, regenerate the CODEARTIFACT-AUTH-TOKEN, run the following
    ```
      export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain visualpath --domain-owner 997450571655 --region us-east-1 --query authorizationToken --output text`
-    
+
     echo $CODEARTIFACT_AUTH_TOKEN
    ```
    Copy the generated token and update the contents of codeartifact-token in parameter store where the values of the former project were. \
@@ -417,7 +417,7 @@ Edit settings.xml to have the following
     RDSUSER: admin
     RDSPASS: <the-generated-password-during-db-creation>
    ```
-   
+
 6. Software testing Job
     Create s3bucket
     ```
@@ -448,7 +448,7 @@ Edit settings.xml to have the following
             - Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
             - choco install jdk8 -y
             - choco install maven -y
-            - choco install googlechrome -y
+            - choco install googlechrome --ignore-checksum -y
             - choco install git -y
             - mkdir C:\output
             - Start-Sleep -s 360
@@ -466,7 +466,7 @@ Edit settings.xml to have the following
     Logs: Group name = vprofile-cicd-logs
             stream name: softwareTestsLogs
 
-    create build project 
+    create build project
 
     ```
     ![](pipeline)
@@ -494,7 +494,76 @@ Edit settings.xml to have the following
         Application name: vprofile app
         environment name: vprofileapp-env
         -> next
-    step 5: create pipeline 
-   
+    step 5: create pipeline
+
     ```
-    
+    Stop the pipeline execution for further editing. Goto to edit, after the source stage, click add stage
+    ```
+        name: CodeAnalysis
+        stage: new stage
+            action name: CodeAnalysis
+            Action provider: AWS CodeBuild
+            input artifact: sourceArtifact
+            Project name: vprofile-build
+            -> done
+    ```
+    We create another source stage after CodeAnalysis
+    ```
+        name: BuildAndStore
+        stage: new stage
+            action name: BuildAndStore
+            Action provider: AWS CodeBuild
+            input artifact: sourceArtifact
+            Project name: vprofile-build-artifact
+            output artifacts: buildArtifact
+            -> done
+    ```
+
+    we add another stage after buildAndStore
+    ```
+        name: DeployToS3
+        stage: new stage
+            action name: DeployToS3
+            Action provider: Amazon s3
+            input artifact: buildArtifact
+            Bucket: vprofile-artifact-storage
+            extract file before deploy = true
+            -> done
+    ```
+
+    Edit the build job by changing the following
+    ```
+    output artifacts = BuildArtifactToBean -> done
+    ```
+
+    Edit the deploy job, change
+    ```
+    input artifact = BuildArtifactToBean -> done
+    ```
+
+    Add a stage at the end of the pipeline
+    ```
+    name: SoftwareTesting
+    stage: new stage
+        action name: SoftwareTesting
+        Action provider: AWS CodeBuild
+        input artifact: SourceArtifact
+        Project name: SoftwareTesting
+        -> done
+
+    ```
+Save pipeline, and release change to launch the pipeline
+
+Update notifications
+```
+manage notifications rules
+create notification
+notification rule settings
+    name: vprofile-aws-cicd-pipeline-notification
+    detail type: full
+    event that trigger notification: select all
+    targets: vprofile-pipeline notification
+    -> submit
+```
+
+
